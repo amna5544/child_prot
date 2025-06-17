@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Dashboard - Child Registration & Personal History</title>
+  <style>
+    /* Reset & Global Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      min-height: 100vh;
+      background: #f2f2f2;
+    }
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+    }
+    .sidebar a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid #444;
+      transition: background-color 0.3s;
+    }
+    .sidebar a:hover {
+      background-color: #575757;
+    }
+    /* Main Content */
+    .content {
+      margin-left: 240px;
+      padding: 20px;
+      flex: 1;
+    }
+    .form-container {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
+      max-width: 650px;
+      margin: 20px auto;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group input[type="file"],
+    .form-group input[type="number"],
+    .form-group select,
+    .form-group textarea {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fff;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    textarea {
+      resize: vertical;
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 180px;
+        padding: 15px;
+      }
+      .content {
+        margin-left: 200px;
+        padding: 15px;
+      }
+      .form-container {
+        width: 100%;
+        margin: 15px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="#" onclick="showForm('childRegistration')"<form action="{{ url_for('register') }}" method="POST">Child Registration</a>
+    <a href="#" onclick="showForm('personalHistory')">Personal History</a>
+    <a href="#" onclick="showForm('individualSession')">Individual Session</a>
+    <a href="#" onclick="showForm('groupSession')">Group Session</a>
+    <a href="#" onclick="showForm('familyCounselling')">Family Counselling</a>
+    <a href="#" onclick="showForm('staffCounselling')">Staff Counselling</a>
+    <a href="#" onclick="showForm('cpiVisit')">CPI Visit</a>
+    <a href="#" onclick="showForm('cspVisit')">CSP Visit</a>
+    <a href="{{ url_for('logout') }}" style="color: rgb(231, 227, 227); font-weight: bold;">Logout</a>
+
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+
+    <!-- Child Registration Form -->
+    <div id="childRegistration" class="form-container">
+      <h2>Child Registration</h2>
+      <form action="{{ url_for('dashboard') }}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="form_type" value="child_registration">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 150px; display: block; margin: 10px auto;background-color: #4CAF50;width: 100%;">
+
+        <div class="form-group">
+          <label for="childName">Child's Name:</label>
+          <input type="text" id="childName" name="childName" required>
+        </div>
+        <div class="form-group">
+          <label for="fatherName">Father's Name:</label>
+          <input type="text" id="fatherName" name="fatherName" required>
+        </div>
+        <div class="form-group">
+          <label for="admissionDate">Date of Admission:</label>
+          <input type="date" id="admissionDate" name="admissionDate" required>
+        </div>
+        <div class="form-group">
+          <label for="admissionLocation">Physical Location of Admission:</label>
+          <input type="text" id="admissionLocation" name="admissionLocation" required>
+        </div>
+        <div class="form-group">
+          <label for="childPhoto">Photograph Upload:</label>
+          <input type="file" id="childPhoto" name="childPhoto" accept="image/*" required>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <!-- End of Child Registration Form -->
+
+    <!-- Personal History -->
+    <div id="personalHistory" class="form-container" style="display:none;">
+      <h2>Personal History</h2>
+      <label for="personalHistorySelect">Select Form:</label>
+      <select id="personalHistorySelect" onchange="showPersonalHistoryForm()">
+        <option value="">-- Select --</option>
+        <option value="initialAssessment">Initial Assessment Form</option>
+        <option value="caseHistoryForm">Case History Performa</option>
+        <option value="counsellingForm">Counselling Details</option>
+      </select>
+      <!-- Initial Assessment Form -->
+      <div id="initialAssessmentForm" style="display:none;">
+        <h3>Initial Assessment Form</h3>
+        <form action="{{ url_for('dashboard') }}" method="POST">
+          <input type="hidden" name="form_type" value="initial_assessment">
+          <!-- If you want a dynamic child selection, replace or remove the line below: -->
+          
+
+          <img src="{{ url_for('static', filename='images/logo.png') }}"
+              alt="Logo"
+              style="width: 150px; display: block; margin: 10px auto; background-color: #4CAF50; width: 100%;">
+              <div class="form-group">
+                <label for="childId">Select Child:</label>
+                <select id="childId" name="childId" required>
+                  <option value="" disabled selected>-- Select a Child --</option>
+                  {% for child in children %}
+                    <option value="{{ child.id }}">{{ child.child_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+          <div class="form-group">
+            <label for="initialName">Name:</label>
+            <input type="text" id="initialName" name="initialName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialRegistrationNo">Registration No:</label>
+            <input type="text" id="initialRegistrationNo" name="initialRegistrationNo" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialGender">Gender:</label>
+            <input type="text" id="initialGender" name="initialGender" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialAge">Age:</label>
+            <input type="number" id="initialAge" name="initialAge" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialReligion">Religion:</label>
+            <input type="text" id="initialReligion" name="initialReligion" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialEducation">Education:</label>
+            <input type="text" id="initialEducation" name="initialEducation" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialBirthOrder">Birth Order:</label>
+            <input type="text" id="initialBirthOrder" name="initialBirthOrder" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialRepeater">Repeater:</label>
+            <input type="text" id="initialRepeater" name="initialRepeater" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialOccupation">Occupation:</label>
+            <input type="text" id="initialOccupation" name="initialOccupation" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialCategory">Category:</label>
+            <!-- Corrected spelling from "Catagory" to "Category" -->
+            <input type="text" id="initialCategory" name="initialcatagory" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialFamilyHistoryFatherName">Father's Name:</label>
+            <input type="text" id="initialFamilyHistoryFatherName" name="initialFamilyHistoryFatherName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialFamilyHistoryFatherOccupation">Father's Occupation:</label>
+            <input type="text" id="initialFamilyHistoryFatherOccupation" name="initialFamilyHistoryFatherOccupation" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialFamilyHistoryMotherName">Mother's Name:</label>
+            <input type="text" id="initialFamilyHistoryMotherName" name="initialFamilyHistoryMotherName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialFamilyHistoryMotherOccupation">Mother's Occupation:</label>
+            <input type="text" id="initialFamilyHistoryMotherOccupation" name="initialFamilyHistoryMotherOccupation" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialFamilyHistorySiblings">Number of Siblings:</label>
+            <input type="number" id="initialFamilyHistorySiblings" name="initialFamilyHistorySiblings" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialFamilyHistorySiblingsDetails">Siblings' Details:</label>
+            <textarea id="initialFamilyHistorySiblingsDetails"
+                      name="initialFamilyHistorySiblingsDetails"
+                      required
+                      maxlength="250"
+                      placeholder="Max Characters 250">
+            </textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="initialFamilyHistoryRelationsWithParents">Relations with Parents:</label>
+            <textarea id="initialFamilyHistoryRelationsWithParents"
+                      name="initialFamilyHistoryRelationsWithParents"
+                      required
+                      maxlength="250"
+                      placeholder="Max Characters 250">
+            </textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="initialHomeAddress">Home Address:</label>
+            <input type="text" id="initialHomeAddress" name="initialHomeAddress" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialContactNo">Contact No:</label>
+            <input type="text" id="initialContactNo" name="initialContactNo" required>
+          </div>
+
+          <div class="form-group">
+            <label for="initialAbuseHistory">Brief History of Abuse:</label>
+            <textarea id="initialAbuseHistory"
+                      name="initialAbuseHistory"
+                      required
+                      maxlength="250"
+                      placeholder="Max Characters 250">
+            </textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="initialSignificantComplaint">Any Significant Complaint:</label>
+            <textarea id="initialSignificantComplaint"
+                      name="initialSignificantComplaint"
+                      required
+                      maxlength="250"
+                      placeholder="Max Characters 250">
+            </textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="initialWorkHistory">Work History of Child:</label>
+            <textarea id="initialWorkHistory"
+                      name="initialWorkHistory"
+                      required
+                      maxlength="250"
+                      placeholder="Max Characters 250">
+            </textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="initialRemarks">Remarks:</label>
+            <textarea id="initialRemarks"
+                      name="initialRemarks"
+                      required
+                      maxlength="250"
+                      placeholder="Max Characters 250">
+            </textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="initialForwardTo">Forward to (if any):</label>
+            <input type="text" id="initialForwardTo" name="initialForwardTo">
+          </div>
+
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      <!-- End of Initial Assessment Form -->
+
+    </div>
+<!-- Case History Performa (FULL version) -->
+<div id="caseHistoryForm" class="form-container" style="display: none;">
+  <h2>Case History Performa</h2>
+  <form action="{{ url_for('dashboard') }}" method="POST">
+    <input type="hidden" name="form_type" value="case_history">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"
+      style="width: 150px; display: block; margin: 10px auto; background-color: #4CAF50; width: 100%;">
+    
+    <!-- Select Child Dropdown (Fixed) -->
+    <div class="form-group">
+      <label for="childId">Select Child:</label>
+      <select id="childId" name="childId" required>
+        <option value="" disabled selected>-- Select a Child --</option>
+        {% for child in children %}
+          <option value="{{ child.id }}">{{ child.child_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Basic Information -->
+    <div class="form-group">
+      <label for="childName">Name:</label>
+      <input type="text" id="childName" name="childName" required>
+    </div>
+    <div class="form-group">
+      <label for="childAge">Age:</label>
+      <input type="number" id="childAge" name="childAge" required>
+    </div>
+    <div class="form-group">
+      <label for="childGender">Gender:</label>
+      <input type="text" id="childGender" name="childGender" required>
+    </div>
+
+    <!-- Admission Details -->
+    <div class="form-group">
+      <label for="admissionSource">Admission Source:</label>
+      <input type="text" id="admissionSource" name="admissionSource" required>
+    </div>
+    <div class="form-group">
+      <label for="abuseStatus">Status (Abuse/Neglect):</label>
+      <input type="text" id="abuseStatus" name="abuseStatus">
+    </div>
+    <div class="form-group">
+      <label for="parentalStatus">Parental Status:</label>
+      <input type="text" id="parentalStatus" name="parentalStatus">
+    </div>
+    <div class="form-group">
+      <label for="siblingsInCPI">Other Siblings in CPI:</label>
+      <input type="text" id="siblingsInCPI" name="siblingsInCPI">
+    </div>
+    <div class="form-group">
+      <label for="duration">Duration:</label>
+      <input type="text" id="duration" name="duration">
+    </div>
+
+    <!-- Family History -->
+    <div class="form-group">
+      <label for="familyHistory">Family History:</label>
+      <textarea id="familyHistory" name="familyHistory" rows="3" required></textarea>
+    </div>
+
+    <!-- Medical & Psychological History -->
+    <div class="form-group">
+      <label for="medicalHistory">Medical History:</label>
+      <textarea id="medicalHistory" name="medicalHistory" rows="3" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="psychologicalHistory">Psychological History:</label>
+      <textarea id="psychologicalHistory" name="psychologicalHistory" rows="3" required></textarea>
+    </div>
+
+    <!-- Therapeutic History (Checkboxes) -->
+    <div class="form-group">
+      <label>Therapeutic History:</label>
+      <div class="checkbox-group" style="display: flex; flex-direction: column;">
+        <label><input type="checkbox" name="therapeuticHistory[]" value="Clinical Interview"> Clinical Interview</label>
+        <label><input type="checkbox" name="therapeuticHistory[]" value="Behavior Therapy"> Behavior Therapy</label>
+        <label><input type="checkbox" name="therapeuticHistory[]" value="Motivational Interviewing"> Motivational Interviewing</label>
+        <label><input type="checkbox" name="therapeuticHistory[]" value="Family Tracing"> Family Tracing</label>
+        <label><input type="checkbox" name="therapeuticHistory[]" value="Psychoeducation"> Psychoeducation</label>
+        <label><input type="checkbox" name="therapeuticHistory[]" value="Cognitive Therapy"> Cognitive Therapy</label>
+        <label><input type="checkbox" name="therapeuticHistory[]" value="Life Skill Training"> Life Skill Training</label>
+        <label><input type="checkbox" name="therapeuticHistory[]" value="Rapport Building"> Rapport Building</label>
+        <label><input type="checkbox" name="therapeuticHistory[]" value="Support Therapy"> Support Therapy</label>
+        <label><input type="checkbox" name="therapeuticHistory[]" value="Formal Education"> Formal Education</label>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit">Submit</button>
+  </form>
+</div>
+<!-- End of Case History Performa (Full) -->
+
+
+    <!-- Counselling Form (Full) -->
+<div id="counsellingForm" class="form-container" style="display:none;">
+  <h3>Counselling Details</h3>
+  <form action="{{ url_for('dashboard') }}" method="POST">
+    <input type="hidden" name="form_type" value="counselling">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 150px; display: block; margin: 10px auto; background-color: #4CAF50; width: 100%;">
+    
+    <div class="form-group">
+      <label for="childId">Select Child:</label>
+      <select id="childId" name="childId" required>
+        <option value="" disabled selected>-- Select a Child --</option>
+        {% for child in children %}
+          <option value="{{ child.id }}">{{ child.child_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="counsellorName">Counsellor Name:</label>
+      <input type="text" id="counsellorName" name="counsellorName" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="sessionDate">Counselling Date:</label>
+      <input type="date" id="sessionDate" name="sessionDate" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="counsellingSessionNotes">Session Notes:</label>
+      <textarea id="counsellingSessionNotes" name="counsellingRemarks" required maxlength="250" placeholder="Max Characters 250"></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="counsellingOutcomes">Outcomes:</label>
+      <textarea id="counsellingOutcomes" name="counsellingOutcomes" required maxlength="250" placeholder="Max Characters 250"></textarea>
+    </div>
+    
+    <button type="submit">Submit</button>
+  </form>
+</div>
+<!-- End of Counselling Form (Full) -->
+
+    <!-- Individual Session Form -->
+    <div id="individualSession" class="form-container" style="display: none;">
+      <h2>Individual Session</h2>
+      <form action="{{ url_for('dashboard') }}" method="POST">
+      <input type="hidden" name="form_type" value="individual_session">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 150px; display: block; margin: 10px auto;background-color: #4CAF50;width: 100%;">
+
+        <div class="form-group">
+          <label for="sessionName">Name:</label>
+          <input type="text" id="sessionName" name="sessionName" required>
+        </div>
+        <div class="form-group">
+          <label for="sessionDate">Date:</label>
+          <input type="date" id="sessionDate" name="sessionDate" required>
+        </div>
+        <div class="form-group">
+          <label for="sessionDetails">Session Details:</label>
+          <textarea id="sessionDetails" name="sessionDetails" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <!-- End of Individual Session Form -->
+
+    <!-- Group Session Form -->
+    <div id="groupSession" class="form-container" style="display: none;">
+      <h2>Group Sessions</h2>
+      <form action="{{ url_for('dashboard') }}" method="POST">
+      <input type="hidden" name="form_type" value="group_session">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 150px; display: block; margin: 10px auto;background-color: #4CAF50;width: 100%;">
+
+        <div class="form-group">
+          <label for="child1Name">Child 1 Name:</label>
+          <input type="text" id="child1Name" name="child1Name" required>
+        </div>
+        <div class="form-group">
+          <label for="child2Name">Child 2 Name:</label>
+          <input type="text" id="child2Name" name="child2Name" required>
+        </div>
+        <div class="form-group">
+          <label for="child3Name">Child 3 Name:</label>
+          <input type="text" id="child3Name" name="child3Name" required>
+        </div>
+        <div class="form-group">
+          <label for="child4Name">Child 4 Name:</label>
+          <input type="text" id="child4Name" name="child4Name" required>
+        </div>
+        <div class="form-group">
+          <label for="groupSessionDetails">Session Details:</label>
+          <textarea id="groupSessionDetails" name="groupSessionDetails" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <!-- End of Group Session Form -->
+
+    <!-- Family Counselling Form -->
+    <div id="familyCounselling" class="form-container" style="display: none;">
+      <h2>Family Counselling</h2>
+      <form action="{{ url_for('dashboard') }}" method="POST">
+        <input type="hidden" name="form_type" value="family_counselling">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 150px; display: block; margin: 10px auto;background-color: #4CAF50;width: 100%;">
+
+        <div class="form-group">
+          <label for="familyName">Family Name:</label>
+          <input type="text" id="familyName" name="familyName" required>
+        </div>
+        <div class="form-group">
+          <label for="fatherNameFamily">Father Name:</label>
+          <input type="text" id="fatherNameFamily" name="fatherNameFamily" required>
+        </div>
+        <div class="form-group">
+          <label for="motherNameFamily">Mother Name:</label>
+          <input type="text" id="motherNameFamily" name="motherNameFamily" required>
+        </div>
+        <div class="form-group">
+          <label for="familySessionDetails">Session Details:</label>
+          <textarea id="familySessionDetails" name="familySessionDetails" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <!-- End of Family Counselling Form -->
+
+    <!-- Staff Counselling Form -->
+    <div id="staffCounselling" class="form-container" style="display: none;">
+      <h2>Staff Counselling</h2>
+      <form action="{{ url_for('dashboard') }}" method="POST">
+      <input type="hidden" name="form_type" value="staff_counselling">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 150px; display: block; margin: 10px auto;background-color: #4CAF50;width: 100%;">
+
+        <div class="form-group">
+          <label for="staffRole">Staff Role:</label>
+          <select id="staffRole" name="staffRole" required>
+            <option value="" disabled selected>Select Staff Role</option>
+            <option value="teacher">Teacher</option>
+            <option value="attendant">Attendant</option>
+            <option value="manager">Manager</option>
+            <option value="principal">Principal</option>
+            <option value="others">Others</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="sessionActivity">Session Activity:</label>
+          <textarea id="sessionActivity" name="sessionActivity" rows="4" maxlength="250"
+            placeholder="Enter session activity (max 250 characters)" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <!-- End of Staff Counselling Form -->
+
+    <!-- CPI Visit Form -->
+    <div id="cpiVisit" class="form-container" style="display: none;">
+      <h2>CPI Visit</h2>
+      <form action="{{ url_for('dashboard') }}" method="POST">
+        <input type="hidden" name="form_type" value="cpi_visit">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 150px; display: block; margin: 10px auto;background-color: #4CAF50;width: 100%;">
+
+        <div class="form-group">
+          <label for="cpiDate">Date:</label>
+          <input type="date" id="cpiDate" name="cpiDate" required>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <!-- End of CPI Visit Form -->
+
+    <!-- CSP Visit Form -->
+    <div id="cspVisit" class="form-container" style="display: none;">
+      <h2>CSP Visit</h2>
+      <form action="{{ url_for('dashboard') }}" method="POST">
+        <input type="hidden" name="form_type" value="csp_visit">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 150px; display: block; margin: 10px auto;background-color: #4CAF50;width: 100%;">
+
+        <div class="form-group">
+          <label for="cspDate">Date:</label>
+          <input type="date" id="cspDate" name="cspDate" required>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <!-- End of CSP Visit Form -->
+
+  </div>
+  <!-- End of Content -->
+
+  <script>
+    function showForm(formId) {
+      const forms = document.querySelectorAll('.form-container');
+      forms.forEach(form => form.style.display = (form.id === formId) ? 'block' : 'none');
+    }
+  
+    function showPersonalHistoryForm() {
+      // Get the selected value from the dropdown
+      const selectedValue = document.getElementById("personalHistorySelect").value;
+  
+      // Map dropdown values to corresponding form container IDs.
+      // Ensure the keys exactly match the option values.
+      const forms = {
+        initialAssessment: "initialAssessmentForm",
+        caseHistoryForm:   "caseHistoryForm",
+        counsellingForm:   "counsellingForm"
+      };
+  
+      // Hide all mapped forms first.
+      Object.values(forms).forEach(formId => {
+        const formDiv = document.getElementById(formId);
+        if (formDiv) {
+          formDiv.style.display = "none";
+        }
+      });
+  
+      // If a form exists for the selected value, display it.
+      if (forms[selectedValue]) {
+        const targetDiv = document.getElementById(forms[selectedValue]);
+        if (targetDiv) {
+          targetDiv.style.display = "block";
+        }
+      }
+    }
+  </script>
+</body>
+</html>

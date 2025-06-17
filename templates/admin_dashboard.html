@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #4ae277, #2e412d);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .dashboard-container {
+            background: white;
+            width: 350px;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .menu a {
+            display: block;
+            padding: 12px;
+            margin: 10px 0;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu a:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            display: block;
+            background-color: #d9534f;
+            padding: 12px;
+            margin-top: 20px;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .logout-btn:hover {
+            background: #c9302c;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h2>Admin Dashboard</h2>
+        
+        <div class="menu">
+            <a href="{{ url_for('manage_forms', form_type='child_registration') }}">Child Registration</a>
+            <a href="{{ url_for('manage_forms', form_type='initial_assessment') }}">Initial Assessment</a>
+            <a href="{{ url_for('manage_forms', form_type='case_history') }}">Case History</a>
+            <a href="{{ url_for('manage_forms', form_type='counselling_sessions') }}">Counselling Sessions</a>
+            <a href="{{ url_for('manage_forms', form_type='individual_sessions') }}">Individual Session</a>
+            <a href="{{ url_for('manage_forms', form_type='group_sessions') }}">Group Session</a>
+            <a href="{{ url_for('manage_forms', form_type='family_counselling') }}">Family Counselling</a>
+            <a href="{{ url_for('manage_forms', form_type='staff_counselling') }}">Staff Counselling</a>
+            <a href="{{ url_for('manage_forms', form_type='cpi_visits') }}">CPI Visit</a>
+            <a href="{{ url_for('manage_forms', form_type='csp_visits') }}">CSP Visit</a>
+        </div>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+
+</body>
+</html>
